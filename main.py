@@ -12,6 +12,7 @@ import random
 class Book:
     def __init__(self, name):
         self.name = name
+        self.start = 0
         self.queue = []
 
 
@@ -59,6 +60,7 @@ for i in library:  # For each of the books in the library
     i.queue[0].books.append(i)  # Give the book to the person randomly selected to be first in line
     print("Day " + str(current_day) + ": " + i.queue[0].name + " has checked out " + i.name)
     i.queue.pop(0)  # Remove that employee from that books queue
+    i.start = current_day
 
 
 while len(archive) != 5:  # While the archive of books is not full
@@ -75,12 +77,23 @@ while len(archive) != 5:  # While the archive of books is not full
     for i in library:  # For each book in the library
         i.queue = sorted(i.queue, key=attrgetter('delta'), reverse=True)  # Resort their queue based on priority
 
+    # Simple for loop that displays the current waiting - retaining of each employee, commented out
+    """
+    printout = "Day " + str(current_day) + ": "
+    for i in company:
+        printout += i.name + " " + str("%.2f" % i.delta) + " | "
+
+    print(printout)
+    """
+
     for i in company:  # For each employee in the company
         if len(i.books) > 0:  # If that employee has books
             for j in reversed(range(0, len(i.books))):  # For each book they have (in reverse order for popping)
-                rando = random.randint(0, 2)  # Randomly decide if they are done with the book
-                if rando == 0:  # If they are done with the book
+                rando = random.randint(0, 3)  # Randomly decide if they are done with the book
+                held = current_day - i.books[j].start  # Checks how long that book has been held for
+                if rando == 0 or held == 7:  # If they are done with the book / have had it for a week
                     if len(i.books[j].queue) != 0:  # If the queue waiting for that book is not empty
+                        i.books[j].start = current_day  # Changes the start date to today
                         i.books[j].queue[0].books.append(i.books[j])  # Give the book to that employee
 
                         # Print that that employee has the book
