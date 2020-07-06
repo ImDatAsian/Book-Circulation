@@ -63,7 +63,7 @@ for i in library:  # For each of the books in the library
     i.start = current_day
 
 
-while len(archive) != 5:  # While the archive of books is not full
+while len(archive) != len(library):  # While the archive of books is not full
     current_day += 1  # Advance to the next day
 
     for i in company:  # For each employee in the company
